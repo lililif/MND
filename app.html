@@ -137,7 +137,7 @@
             transform: translateX(-50%);
             text-align: center;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
         }
     </style>
@@ -162,7 +162,8 @@
         <span id="block_time">00:00:00</span>
     </div>
     <script>
-        const baseDate = new Date(urlParam('date'));
+        const installDate = new Date(urlParam('install').toString());
+        const blockDate = new Date(urlParam('block').toString());
 
         function urlParam(name)
         {
@@ -174,15 +175,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const diff = now - baseDate;
+            const diff = now - blockDate;
     
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     
-            document.getElementById('install').innerText = formatDate(baseDate);
-            document.getElementById('block').innerText = formatDate(baseDate);
+            document.getElementById('install').innerText = formatDate(installDate);
+            document.getElementById('block').innerText = formatDate(blockDate);
             document.getElementById('block_day').innerText = `${days}일`;
             document.getElementById('block_time').innerText = formatTime(hours, minutes, seconds);
         }
@@ -203,8 +204,8 @@
 
         function checkApp() {
             const mqStandAlone = '(display-mode: standalone)';
-            if (!(navigator.standalone || window.matchMedia(mqStandAlone).matches)) {
-                document.getElementById('not_app_top').innerText = `국방모바일보안 차단일시\n${formatDate(baseDate, 0)}`;
+			if (!(navigator.standalone || window.matchMedia(mqStandAlone).matches)) {
+                document.getElementById('not_app_top').innerText = `❬ 국방모바일보안 ❭\n\n설치일시\n${formatDate(installDate, 0)}\n\n차단일시\n${formatDate(blockDate, 0)}`;
                 return;
             }
             document.getElementById('not_app').style.display = 'none';
@@ -212,7 +213,8 @@
         }
     
         document.addEventListener('DOMContentLoaded', function() {
-            if (baseDate !== false) {
+            console.log(urlParam('date').toString())
+            if (installDate !== false && blockDate !== false) {
                 checkApp();
                 updateDateTime();
                 setInterval(updateDateTime, 1000);
