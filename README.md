@@ -1,5 +1,5 @@
 # MND
-[단축어 설치하기](https://www.icloud.com/shortcuts/5589cfb5396244f9994f9c3c0b99d518)
+[단축어 설치하기](https://www.icloud.com/shortcuts/d58d892afb1f4883b6ee525bd48d9c1a)
 
 * `iPhone 14 pro` 이외의 기종은 비율이 다를 수 있습니다.
 
