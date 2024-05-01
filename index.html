@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="./imgs/icon.png">
+    <link rel="apple-touch-startup-image" href="./imgs/icon.png">
+    <meta name="apple-mobile-web-app-title" content="국방모바일보안">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        @keyframes rotateInSteps {
+            from {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        body, html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #222222;
+            position: relative;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        #layer1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #container {
+            position: absolute;
+            top: 332px;
+            left: 50%;
+            width: 65%;
+            height: auto;
+            transform: translateX(-50%);
+        }
+
+        #layer2 {
+            position: absolute;
+            left: 50%;
+            height: auto;
+            object-fit: contain;
+            animation: rotateInSteps 3s steps(33) infinite;
+        }
+
+        #layer3 {
+            position: absolute;
+            left: 50%;
+            width: 77%;
+            height: auto;
+            object-fit: contain;
+            transform: translate(-50%, 14.8%);
+            z-index: 1;
+        }
+
+        #install {
+            position: absolute;
+            top: 72px;
+            left: 158px;
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+        }
+        
+        #block {
+            position: absolute;
+            top: 104.5px;
+            left: 158px;
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        #block_day {
+            position: absolute;
+            top: 495px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        #block_time {
+            position: absolute;
+            top: 514px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        #app {
+            display: none;
+        }
+
+        #not_app {
+            display: block;
+        }
+
+        #not_app_top {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        #not_app_bottom {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900;
+        }
+    </style>
+    <title>국방모바일보안</title>
+</head>
+<body>
+    <div id="not_app">
+        <div id="not_app_top"></div>
+        <div id="not_app_bottom">
+            아래 공유 아이콘을 누른 다음<br>'홈 화면에 추가'를 선택하세요.
+        </div>
+    </div>
+    <div id="app">
+        <img src="./imgs/Layer1.png" alt="Layer 1" id="layer1">
+        <div id="container">
+            <img src="./imgs/Layer2.png" alt="Layer 2" id="layer2">
+            <img src="./imgs/Layer3.png" alt="Layer 3" id="layer3">
+        </div>
+        <span id="install">00.00.00 00:00</span>
+        <span id="block">00.00.00 00:00</span>
+        <span id="block_day">0일</span>
+        <span id="block_time">00:00:00</span>
+    </div>
+    <script>
+        const baseDate = new Date(urlParam('date'));
+
+        function urlParam(name)
+        {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (!urlParams.has(name)) { return false; } 
+            return urlParams.get(name).replaceAll(' ', '+');
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const diff = now - baseDate;
+    
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+            document.getElementById('install').innerText = formatDate(baseDate);
+            document.getElementById('block').innerText = formatDate(baseDate);
+            document.getElementById('block_day').innerText = `${days}일`;
+            document.getElementById('block_time').innerText = formatTime(hours, minutes, seconds);
+        }
+    
+        function formatDate(date, yearSubstring = 2) {
+            return date.getFullYear().toString().substring(yearSubstring) + '.' +
+                   ((date.getMonth() + 1).toString().padStart(2, '0')) + '.' +
+                   (date.getDate().toString().padStart(2, '0')) + ' ' +
+                   (date.getHours().toString().padStart(2, '0')) + ':' +
+                   (date.getMinutes().toString().padStart(2, '0'));
+        }
+    
+        function formatTime(hours, minutes, seconds) {
+            return (hours.toString().padStart(2, '0')) + ':' +
+                   (minutes.toString().padStart(2, '0')) + ':' +
+                   (seconds.toString().padStart(2, '0'));
+        }
+
+        function checkApp() {
+            const mqStandAlone = '(display-mode: standalone)';
+            if (!(navigator.standalone || window.matchMedia(mqStandAlone).matches)) {
+                document.getElementById('not_app_top').innerText = `국방모바일보안 차단일시\n${formatDate(baseDate, 0)}`;
+                return;
+            }
+            document.getElementById('not_app').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            if (baseDate !== false) {
+                checkApp();
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+            }
+        });
+    </script>    
+</body>
+</html>
